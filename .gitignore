@@ -1,0 +1,15 @@
+*.pyo
+*.pyc
+*.~
+.idea
+__pycache__
+*.sqlite3
+*.log
+.venv
+.env
+.coverage
+env
+coverage
+build
+dist
+django_views.egg-info
