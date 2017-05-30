@@ -3,6 +3,8 @@
 # TIME    : 17-5-28 下午5:00
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 import logging
+from django.core.paginator import Paginator
+from django.utils.translation import ugettext as _
 from django.shortcuts import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.http import \
@@ -124,11 +126,59 @@ class FlashNoteMixin:
 
 
 class PermissionMixin:
-    pass
+    user = ['login']
+    group = []
+    extra = []
+    status = False
+
+    messages = {
+        'user':
+            {
+                'login': _('user need login to access the resources')
+            },
+        'group':
+            {
+
+            },
+        'extra':
+            {
+
+            }
+    }
+
+    def has_permission(self, request):
+        messages = {}
+        status = False
+
+        for perm in self.user:
+            pass
+
+        for perm in self.group:
+            pass
+
+        for perm in self.extra:
+            pass
+
+    def fuck_permission(self, request):
+        pass
+
+    @staticmethod
+    def user_login_permission(request):
+        if request.user.is_authenticated():
+            return True
+        else:
+            return False
 
 
 class PaginationMixin:
-    pass
+    allow_empty_first_page = False
+    pagination_class = Paginator
+    per_page = 10
+
+    def get_page(self, query_set, page=1):
+        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
+        page_obj = pager.page(page)
+        return page_obj
 
 
 class FilterMixin:

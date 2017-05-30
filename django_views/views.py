@@ -48,12 +48,3 @@ class Generic(FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextM
         else:
             return Http404
 
-"""
-
-common view
-
-get -> return a template
-
-post -> return a json obj or redirect
-
-"""
