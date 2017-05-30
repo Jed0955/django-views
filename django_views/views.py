@@ -5,10 +5,14 @@
 from django.http import Http404
 from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
-from .mixins import ContextMixin, RedirectResponseMixin, JsonResponseMixin
+from .mixins import \
+    ContextMixin, \
+    RedirectResponseMixin,\
+    JsonResponseMixin, \
+    FlashNoteMixin
 
 
-class Common(JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin, View):
+class Generic(FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin, View):
 
     post_json = False
     post_redirect = True

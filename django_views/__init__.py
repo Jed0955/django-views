@@ -3,7 +3,6 @@
 # TIME    : 17-5-28 下午4:04
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 
-from .views import Common
-from .mixins import LoginRequiredMixin
+from .views import Generic
 
-__all__ = ['Common', 'LoginRequiredMixin']
+__all__ = ['Generic']
