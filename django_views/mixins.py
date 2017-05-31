@@ -133,6 +133,8 @@ class PermissionMixin:
     extra = []
     # code name
     user = ['login']
+    # redirect when permission check failed
+    permission_redirect_url = None
 
     messages = {
         'user':
@@ -205,16 +207,16 @@ class HookMixin:
     put_hook_force_return = False
     delete_hook_force_return = False
 
-    def get_hook(self, request, *args, **kwargs):
+    def get_hook(self, request, context, *args, **kwargs):
         pass
 
-    def post_hook(self, request, *args, **kwargs):
+    def post_hook(self, request, context, *args, **kwargs):
         pass
 
-    def put_hook(self, request, *args, **kwargs):
+    def put_hook(self, request, context, *args, **kwargs):
         pass
 
-    def delete_hook(self, request, *args, **kwargs):
+    def delete_hook(self, request, context, *args, **kwargs):
         pass
 
 

@@ -9,15 +9,15 @@ from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
 from .mixins import \
     ContextMixin, \
-    RedirectResponseMixin,\
+    RedirectResponseMixin, \
     JsonResponseMixin, \
     FlashNoteMixin, \
     PermissionMixin, \
     HookMixin
 
 
-class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin, View):
-
+class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin,
+              View):
     post_json = False
     post_redirect = True
     get_json = False
@@ -28,33 +28,37 @@ class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixi
     http_method_names = ['get', 'post']
 
     def get(self, request, *args, **kwargs):
+        context = {}
         if self.use_get_hook:
-            response = self.get_hook(request, *args, **kwargs)
+            response = self.get_hook(request, context, *args, **kwargs)
             if self.get_hook_force_return:
                 return response
 
-        context = self.get_context_data(request, *args, **kwargs)
+        context.update(self.get_context_data(request, *args, **kwargs))
 
         if self.get_template:
             return self.render_to_response(context)
 
         elif self.get_redirect:
+            self.add_note_dict(request, context)
             return self.redirect(request, *args, **kwargs)
 
-        elif self.get_template:
+        elif self.get_json:
             return self.response_json(context, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        context = {}
         if self.use_post_hook:
-            response = self.post_hook(request, *args, **kwargs)
+            response = self.post_hook(request, context, *args, **kwargs)
             if self.post_hook_force_return:
                 return response
 
-        context = self.post_context_data(request, *args, **kwargs)
+        context.update(self.post_context_data(request, *args, **kwargs))
         if self.post_json:
             return self.response_json(context, **kwargs)
 
         elif self.post_redirect:
+            self.add_note(request, context)
             return self.redirect(request, *args, **kwargs)
 
         else:
@@ -65,10 +69,21 @@ class PermissionGeneric(PermissionMixin, Generic):
     use_get_hook = True
     use_post_hook = True
 
-    def get_hook(self, request, *args, **kwargs):
-        self.url = settings.LOGIN_URl
-        if self.has_permission(request):
-            pass
+    get_json = False
+    get_redirect = False
+    get_template = False
 
-    def post_hook(self, request, *args, **kwargs):
-        pass
+    def get_hook(self, request, context, *args, **kwargs):
+        ret = self.has_permission(request)
+
+        if ret.get('status', False):
+            self.get_template = True
+            context.update({'permission': ret})
+
+        else:
+            self.get_redirect = True
+            self.url = self.permission_redirect_url if self.permission_redirect_url else settings.LOGIN_URl
+
+    def post_hook(self, request, context, *args, **kwargs):
+        ret = self.has_permission(request)
+        context.update({'permission': ret})
