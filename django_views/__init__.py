@@ -3,6 +3,6 @@
 # TIME    : 17-5-28 下午4:04
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 
-from .views import Generic
+# from .views import Generic
 
-__all__ = ['Generic']
+# __all__ = ['Generic']
