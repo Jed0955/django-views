@@ -4,7 +4,6 @@
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 from django.http import Http404
 from django.conf import settings
-from django.utils.translation import ugettext as _
 from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
 from .mixins import \
