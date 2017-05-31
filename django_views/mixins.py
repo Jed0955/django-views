@@ -12,6 +12,7 @@ from django.http import \
     HttpResponseRedirect, \
     HttpResponseGone, \
     JsonResponse
+from django.contrib.auth.models import Permission, Group
 
 from .exceptions import NoteExistsException
 
@@ -126,10 +127,12 @@ class FlashNoteMixin:
 
 
 class PermissionMixin:
-    user = ['login']
+    # group name
     group = []
+    # extra func name
     extra = []
-    status = False
+    # code name
+    user = ['login']
 
     messages = {
         'user':
@@ -147,20 +150,41 @@ class PermissionMixin:
     }
 
     def has_permission(self, request):
-        messages = {}
         status = False
+        warnings = \
+            {
+                'user': {},
+                'group': {},
+                'extra': {}
+            }
 
-        for perm in self.user:
-            pass
+        if self.user_login_permission(request):
+            user = request.user
+            for perm in self.user:
+                try:
+                    user.user_permissions.get(codename=perm)
+                except Permission.DoesNotExist:
+                    status = False
+                    warnings['user'].update({perm: self.messages['user'].get(perm, '')})
 
-        for perm in self.group:
-            pass
+            for perm in self.group:
+                try:
+                    user.groups.get(name=perm)
+                except Group.DoesNotExist:
+                    status = False
+                    warnings['group'].update({perm: self.messages['group'].get(perm, '')})
 
-        for perm in self.extra:
-            pass
+            for perm in self.extra:
+                func = getattr(self, perm + '_permission', None)
+                if func and callable(func):
+                    status = func(request)
+                    if not status:
+                        warnings.update({'extra': {perm: self.messages['extra'].get(perm, '')}})
+        else:
+            warnings.update({'user': {'login': self.messages['user']['login']}})
+            status = False
 
-    def fuck_permission(self, request):
-        pass
+        return {'status': status, 'messages': warnings}
 
     @staticmethod
     def user_login_permission(request):
