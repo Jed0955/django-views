@@ -1,0 +1,5 @@
+[run]
+branch = True
+source = ./django_views/
+[html]
+directory = coverage

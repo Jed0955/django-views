@@ -194,6 +194,30 @@ class PermissionMixin:
             return False
 
 
+class HookMixin:
+    use_get_hook = True
+    use_post_hook = True
+    use_put_hook = True
+    use_delete_hook = True
+
+    get_hook_force_return = False
+    post_hook_force_return = False
+    put_hook_force_return = False
+    delete_hook_force_return = False
+
+    def get_hook(self, request, *args, **kwargs):
+        pass
+
+    def post_hook(self, request, *args, **kwargs):
+        pass
+
+    def put_hook(self, request, *args, **kwargs):
+        pass
+
+    def delete_hook(self, request, *args, **kwargs):
+        pass
+
+
 class PaginationMixin:
     allow_empty_first_page = False
     pagination_class = Paginator
