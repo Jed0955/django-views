@@ -65,8 +65,18 @@ class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixi
             return Http404
 
 
-class APIGeneric(APIContextMixin, Generic):
-    pass
+class APIGeneric(APIContextMixin, PermissionMixin, Generic):
+    use_get_hook = True
+    use_post_hook = True
+    use_put_hook = True
+    use_delete_hook = True
+
+    get_json = True
+    get_redirect = False
+    get_template = False
+
+    post_json = True
+    post_redirect = False
 
 
 class PermissionGeneric(PermissionMixin, Generic):
