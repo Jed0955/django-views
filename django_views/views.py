@@ -60,7 +60,6 @@ class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixi
         elif self.post_redirect:
             self.add_note(request, context)
             return self.redirect(request, *args, **kwargs)
-
         else:
             return Http404
 
@@ -83,20 +82,9 @@ class PermissionGeneric(PermissionMixin, Generic):
     use_get_hook = True
     use_post_hook = True
 
-    get_json = False
-    get_redirect = False
-    get_template = False
-
     def get_hook(self, request, context, *args, **kwargs):
         ret = self.has_permission(request)
-
-        if ret.get('status', False):
-            self.get_template = True
-            context.update({'permission': ret})
-
-        else:
-            self.get_redirect = True
-            self.url = self.permission_redirect_url if self.permission_redirect_url else settings.LOGIN_URl
+        context.update({'permission': ret})
 
     def post_hook(self, request, context, *args, **kwargs):
         ret = self.has_permission(request)

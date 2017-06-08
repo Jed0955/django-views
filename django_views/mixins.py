@@ -4,7 +4,6 @@
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 import logging
 from django.core.paginator import Paginator
-from django.utils.translation import ugettext as _
 from django.shortcuts import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.http import \
@@ -132,22 +131,19 @@ class PermissionMixin:
     # extra func name
     extra = []
     # code name
-    user = ['login']
+    user = []
     # redirect when permission check failed
     permission_redirect_url = None
 
     messages = {
         'user':
             {
-                'login': _('user need login to access the resources')
             },
         'group':
             {
-
             },
         'extra':
             {
-
             }
     }
 
@@ -160,6 +156,7 @@ class PermissionMixin:
                 'extra': {}
             }
 
+        # if we want more permission info with the current user , the user must login first
         if self.user_login_permission(request):
             user = request.user
             for perm in self.user:
@@ -183,7 +180,7 @@ class PermissionMixin:
                     if not status:
                         warnings.update({'extra': {perm: self.messages['extra'].get(perm, '')}})
         else:
-            warnings.update({'user': {'login': self.messages['user']['login']}})
+            warnings.update({'user': {'login': self.messages['user'].get('login', '')}})
             status = False
 
         return {'status': status, 'messages': warnings}
@@ -240,3 +237,20 @@ class JsonResponseMixin:
 
     def response_json(self, context, **kwargs):
         return JsonResponse(context, safe=self.json_safe, **kwargs)
+
+
+class GetRedirect:
+    get_json = False
+    get_redirect = True
+    get_template = False
+
+
+class GetJson:
+    get_json = True
+    get_redirect = False
+    get_template = False
+
+class GetTemplate:
+    get_tempalte = True
+    get_json = False
+    get_
