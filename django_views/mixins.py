@@ -27,7 +27,7 @@ class ContextMixin:
         pass
 
 
-class RestContextMixin(ContextMixin):
+class APIContextMixin(ContextMixin):
     def put_context_data(self, request, *args, **kwargs):
         pass
 

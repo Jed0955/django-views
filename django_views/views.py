@@ -12,7 +12,8 @@ from .mixins import \
     JsonResponseMixin, \
     FlashNoteMixin, \
     PermissionMixin, \
-    HookMixin
+    HookMixin, \
+    APIContextMixin
 
 
 class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin,
@@ -62,6 +63,10 @@ class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixi
 
         else:
             return Http404
+
+
+class APIGeneric(APIContextMixin, Generic):
+    pass
 
 
 class PermissionGeneric(PermissionMixin, Generic):
