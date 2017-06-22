@@ -75,7 +75,7 @@ setup(
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=
     [
-        'django>=1.10',
+        'django',
         'django-filter'
     ],
 
