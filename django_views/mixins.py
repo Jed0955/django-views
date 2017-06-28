@@ -156,7 +156,8 @@ class PermissionMixin:
                 'extra': {}
             }
 
-        # if we want more permission info with the current user , the user must login first
+        # if we want more permission info with the current user
+        # the user must login first
         if self.user_login_permission(request):
             user = request.user
             for perm in self.user:
@@ -164,23 +165,29 @@ class PermissionMixin:
                     user.user_permissions.get(codename=perm)
                 except Permission.DoesNotExist:
                     status = False
-                    warnings['user'].update({perm: self.messages['user'].get(perm, '')})
+                    warnings['user'].update({
+                        perm: self.messages['user'].get(perm, '')
+                        })
 
             for perm in self.group:
                 try:
                     user.groups.get(name=perm)
                 except Group.DoesNotExist:
                     status = False
-                    warnings['group'].update({perm: self.messages['group'].get(perm, '')})
+                    warnings['group'].update({
+                        perm: self.messages['group'].get(perm, '')
+                        })
 
             for perm in self.extra:
                 func = getattr(self, perm + '_permission', None)
                 if func and callable(func):
                     status = func(request)
                     if not status:
-                        warnings.update({'extra': {perm: self.messages['extra'].get(perm, '')}})
+                        message = self.messages['extra'].get(perm, '')
+                        warnings.update({'extra': {perm: messages}})
         else:
-            warnings.update({'user': {'login': self.messages['user'].get('login', '')}})
+            message = self.messages['user'].get('login', '')
+            warnings.update({'user': {'login': message}})
             status = False
 
         return {'status': status, 'messages': warnings}
@@ -223,7 +230,11 @@ class PaginationMixin:
     per_page = 10
 
     def get_page(self, query_set, page=1):
-        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
+        pager = self.pagination_class(
+            query_set,
+            self.per_page,
+            allow_empty_first_page=self.allow_empty_first_page)
+
         page_obj = pager.page(page)
         return page_obj
 
@@ -250,14 +261,17 @@ class GetJson:
     get_redirect = False
     get_template = False
 
+
 class GetTemplate:
     get_tempalte = True
     get_json = False
     get_redirect = False
 
+
 class PostJson:
     post_json = True
     post_redirect = False
+
 
 class PostRedirect:
     post_json = False

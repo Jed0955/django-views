@@ -18,8 +18,15 @@ from .mixins import \
     PostJson
 
 
-class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin,
-              View):
+class Generic(
+        HookMixin,
+        FlashNoteMixin,
+        JsonResponseMixin,
+        RedirectResponseMixin,
+        ContextMixin,
+        TemplateResponseMixin,
+        View):
+
     post_json = False
     post_redirect = True
     get_json = False

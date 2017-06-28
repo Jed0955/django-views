@@ -6,7 +6,7 @@
 from django.test import TestCase
 
 
-class TestGeneric(TestCase):
+class TestGenericView(TestCase):
     def setUp(self):
         pass
 
@@ -15,3 +15,7 @@ class TestGeneric(TestCase):
 
     def test_fuck(self):
         assert False
+
+
+class TestPermissionView:
+    pass
