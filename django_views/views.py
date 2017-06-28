@@ -13,7 +13,9 @@ from .mixins import \
     FlashNoteMixin, \
     PermissionMixin, \
     HookMixin, \
-    APIContextMixin
+    APIContextMixin, \
+    GetJson, \
+    PostJson
 
 
 class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixin, ContextMixin, TemplateResponseMixin,
@@ -64,18 +66,11 @@ class Generic(HookMixin, FlashNoteMixin, JsonResponseMixin, RedirectResponseMixi
             return Http404
 
 
-class APIGeneric(APIContextMixin, PermissionMixin, Generic):
+class APIGeneric(GetJson, PostJson, APIContextMixin, PermissionMixin, Generic):
     use_get_hook = True
     use_post_hook = True
     use_put_hook = True
     use_delete_hook = True
-
-    get_json = True
-    get_redirect = False
-    get_template = False
-
-    post_json = True
-    post_redirect = False
 
 
 class PermissionGeneric(PermissionMixin, Generic):

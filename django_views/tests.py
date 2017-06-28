@@ -14,4 +14,4 @@ class TestGeneric(TestCase):
         pass
 
     def test_fuck(self):
-        assert True
+        assert False

@@ -253,4 +253,12 @@ class GetJson:
 class GetTemplate:
     get_tempalte = True
     get_json = False
-    get_
+    get_redirect = False
+
+class PostJson:
+    post_json = True
+    post_redirect = False
+
+class PostRedirect:
+    post_json = False
+    post_redirect = True

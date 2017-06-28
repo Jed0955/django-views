@@ -48,7 +48,7 @@ setup(
         # Indicate who your project is intended for
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
-        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 1.11',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
