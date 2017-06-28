@@ -83,7 +83,7 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'test': ['coverage'],
+        'test': ['coverage', 'django-nose'],
     },
 
     # To provide executable scripts, use entry points in preference to the
