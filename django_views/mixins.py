@@ -226,10 +226,7 @@ class PaginationMixin:
     per_page = 10
 
     def get_page(self, query_set, page=1):
-        pager = self.pagination_class(
-            query_set,
-            self.per_page,
-            allow_empty_first_page=self.allow_empty_first_page)
+        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
 
         page_obj = pager.page(page)
         return page_obj
