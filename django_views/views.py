@@ -15,10 +15,14 @@ from .mixins import \
     HookMixin, \
     APIContextMixin, \
     GetJson, \
-    PostJson
+    PostJson, \
+    GetTemplate, \
+    PostRedirect
 
 
 class Generic(
+        GetTemplate,
+        PostRedirect,
         HookMixin,
         FlashNoteMixin,
         JsonResponseMixin,
@@ -27,11 +31,6 @@ class Generic(
         TemplateResponseMixin,
         View):
 
-    post_json = False
-    post_redirect = True
-    get_json = False
-    get_redirect = False
-    get_template = True
     template_name = None
     json_safe = False
     http_method_names = ['get', 'post']

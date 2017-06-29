@@ -165,18 +165,14 @@ class PermissionMixin:
                     user.user_permissions.get(codename=perm)
                 except Permission.DoesNotExist:
                     status = False
-                    warnings['user'].update({
-                        perm: self.messages['user'].get(perm, '')
-                        })
+                    warnings['user'].update({perm: self.messages['user'].get(perm, '')})
 
             for perm in self.group:
                 try:
                     user.groups.get(name=perm)
                 except Group.DoesNotExist:
                     status = False
-                    warnings['group'].update({
-                        perm: self.messages['group'].get(perm, '')
-                        })
+                    warnings['group'].update({perm: self.messages['group'].get(perm, '')})
 
             for perm in self.extra:
                 func = getattr(self, perm + '_permission', None)
