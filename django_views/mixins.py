@@ -11,7 +11,6 @@ from django.http import \
     HttpResponseRedirect, \
     HttpResponseGone, \
     JsonResponse
-from django.contrib.auth.models import Permission, Group
 
 from .exceptions import NoteExistsException
 
@@ -24,6 +23,42 @@ class ContextMixin:
 
     def get_context_data(self, request, *args, **kwargs):
         pass
+
+
+class GetResponseTemplateMixin:
+    get_to_template = True
+    get_to_json = False
+    get_to_redirect = False
+
+
+class GetResponseJsonMixin:
+    get_to_template = False
+    get_to_json = True
+    get_to_redirect = False
+
+
+class GetResponseDirectMixin:
+    get_to_template = False
+    get_to_json = False
+    get_to_redirect = True
+
+
+class PostResponseTemplateMixin:
+    post_to_template = True
+    post_to_json = False
+    post_to_redirect = False
+
+
+class PostResponseJsonMixin:
+    post_to_template = False
+    post_to_json = True
+    post_to_redirect = False
+
+
+class PostResponseDirectMixin:
+    post_to_template = False
+    post_to_json = False
+    post_to_redirect = True
 
 
 class APIContextMixin(ContextMixin):
@@ -125,101 +160,6 @@ class FlashNoteMixin:
         return note
 
 
-class PermissionMixin:
-    # group name
-    group = []
-    # extra func name
-    extra = []
-    # code name
-    user = []
-    # redirect when permission check failed
-    permission_redirect_url = None
-
-    messages = {
-        'user':
-            {
-            },
-        'group':
-            {
-            },
-        'extra':
-            {
-            }
-    }
-
-    def has_permission(self, request):
-        status = False
-        warnings = \
-            {
-                'user': {},
-                'group': {},
-                'extra': {}
-            }
-
-        # if we want more permission info with the current user
-        # the user must login first
-        if self.user_login_permission(request):
-            user = request.user
-            for perm in self.user:
-                try:
-                    user.user_permissions.get(codename=perm)
-                except Permission.DoesNotExist:
-                    status = False
-                    warnings['user'].update({perm: self.messages['user'].get(perm, '')})
-
-            for perm in self.group:
-                try:
-                    user.groups.get(name=perm)
-                except Group.DoesNotExist:
-                    status = False
-                    warnings['group'].update({perm: self.messages['group'].get(perm, '')})
-
-            for perm in self.extra:
-                func = getattr(self, perm + '_permission', None)
-                if func and callable(func):
-                    status = func(request)
-                    if not status:
-                        message = self.messages['extra'].get(perm, '')
-                        warnings.update({'extra': {perm: messages}})
-        else:
-            message = self.messages['user'].get('login', '')
-            warnings.update({'user': {'login': message}})
-            status = False
-
-        return {'status': status, 'messages': warnings}
-
-    @staticmethod
-    def user_login_permission(request):
-        if request.user.is_authenticated():
-            return True
-        else:
-            return False
-
-
-class HookMixin:
-    use_get_hook = True
-    use_post_hook = True
-    use_put_hook = True
-    use_delete_hook = True
-
-    get_hook_force_return = False
-    post_hook_force_return = False
-    put_hook_force_return = False
-    delete_hook_force_return = False
-
-    def get_hook(self, request, context, *args, **kwargs):
-        pass
-
-    def post_hook(self, request, context, *args, **kwargs):
-        pass
-
-    def put_hook(self, request, context, *args, **kwargs):
-        pass
-
-    def delete_hook(self, request, context, *args, **kwargs):
-        pass
-
-
 class PaginationMixin:
     allow_empty_first_page = False
     pagination_class = Paginator
@@ -232,40 +172,8 @@ class PaginationMixin:
         return page_obj
 
 
-class FilterMixin:
-    pass
-
-
 class JsonResponseMixin:
     json_safe = False
 
     def response_json(self, context, **kwargs):
         return JsonResponse(context, safe=self.json_safe, **kwargs)
-
-
-class GetRedirect:
-    get_json = False
-    get_redirect = True
-    get_template = False
-
-
-class GetJson:
-    get_json = True
-    get_redirect = False
-    get_template = False
-
-
-class GetTemplate:
-    get_tempalte = True
-    get_json = False
-    get_redirect = False
-
-
-class PostJson:
-    post_json = True
-    post_redirect = False
-
-
-class PostRedirect:
-    post_json = False
-    post_redirect = True
