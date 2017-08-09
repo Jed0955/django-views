@@ -2,7 +2,6 @@
 # PROJECT : django-views
 # TIME    : 17-5-28 下午5:00
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
-from django.http import Http404
 from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
 from .mixins import \
