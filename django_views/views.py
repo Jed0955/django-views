@@ -13,10 +13,12 @@ from .mixins import \
     GetResponseTemplateMixin, \
     PostResponseDirectMixin, \
     GetResponseJsonMixin, \
-    PostResponseJsonMixin
+    PostResponseJsonMixin, \
+    PermissionMixin
 
 
 class Generic(
+        PermissionMixin,
         GetResponseTemplateMixin,
         PostResponseDirectMixin,
         FlashNoteMixin,
@@ -32,7 +34,13 @@ class Generic(
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context.update(self.get_context_data(request, *args, **kwargs))
+
+        permission = self.get_permission()
+
+        if permission.get('status', False):
+            context.update(self.get_context_data(request, *args, **kwargs))
+        else:
+            context.update(self.get_permission())
 
         if self.get_to_template:
             return self.render_to_response(context)
@@ -46,7 +54,13 @@ class Generic(
 
     def post(self, request, *args, **kwargs):
         context = {}
-        context.update(self.post_context_data(request, *args, **kwargs))
+
+        permission = self.post_permission()
+
+        if permission.get('status', False):
+            context.update(self.post_context_data(request, *args, **kwargs))
+        else:
+            context.update(self.post_permission())
 
         if self.post_to_json:
             return self.response_json(context, **kwargs)
@@ -63,10 +77,24 @@ class APIGeneric(GetResponseJsonMixin, PostResponseJsonMixin, APIContextMixin, G
 
     def put(self, request, *args, **kwargs):
         context = {}
-        context.update(self.put_context_data(request, *args, **kwargs))
+
+        permission = self.put_permission()
+
+        if permission.get('status', False):
+            context.update(self.put_context_data(request, *args, **kwargs))
+        else:
+            context.update(self.put_permission())
+
         return self.response_json(context)
 
     def delete(self, request, *args, **kwargs):
         context = {}
-        context.update(self.delete_context_data(request, *args, **kwargs))
+
+        permission = self.delete_permission()
+
+        if permission.get('status', False):
+            context.update(self.delete_context_data(request, *args, **kwargs))
+        else:
+            context.update(self.delete_permission())
+
         return self.response_json(context)

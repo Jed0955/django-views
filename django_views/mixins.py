@@ -177,3 +177,21 @@ class JsonResponseMixin:
 
     def response_json(self, context, **kwargs):
         return JsonResponse(context, safe=self.json_safe, **kwargs)
+
+
+# it must return as
+# { status: False, message: 'need user to login'}
+# { status: True, message: 'ok'}
+
+class PermissionMixin:
+    def get_permission(self):
+        pass
+
+    def post_permission(self):
+        pass
+
+    def put_permission(self):
+        pass
+
+    def delete_permission(self):
+        pass
