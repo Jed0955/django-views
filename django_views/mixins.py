@@ -3,6 +3,7 @@
 # TIME    : 17-5-28 下午5:00
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 import logging
+from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator
 from django.shortcuts import reverse
 from django.urls.exceptions import NoReverseMatch
@@ -187,17 +188,19 @@ class JsonResponseMixin:
 # { status: True, message: 'ok'}
 
 class PermissionMixin:
+    message = _('ok')
+
     def get_permission(self, request):
-        pass
+        return {'status': True, 'message': self.message}
 
     def post_permission(self, request):
-        pass
+        return {'status': True, 'message': self.message}
 
     def put_permission(self, request):
-        pass
+        return {'status': True, 'message': self.message}
 
     def delete_permission(self, request):
-        pass
+        return {'status': True, 'message': self.message}
 
     # belows are all buildin permission test helper
     @staticmethod
