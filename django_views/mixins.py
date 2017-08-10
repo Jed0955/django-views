@@ -198,3 +198,8 @@ class PermissionMixin:
 
     def delete_permission(self, request):
         pass
+
+    # belows are all buildin permission test helper
+    @staticmethod
+    def is_superuser(request):
+        return request.user.is_authenticated and request.user.is_superuser
