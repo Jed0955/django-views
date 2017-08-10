@@ -165,11 +165,14 @@ class PaginationMixin:
     pagination_class = Paginator
     per_page = 10
 
-    def get_page(self, query_set, page=1):
+    def get_page_obj(self, query_set, page=1):
         pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
-
         page_obj = pager.page(page)
         return page_obj
+
+    def get_page(self, query_set):
+        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
+        return pager
 
 
 class JsonResponseMixin:
