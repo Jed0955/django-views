@@ -35,12 +35,12 @@ class Generic(
     def get(self, request, *args, **kwargs):
         context = {}
 
-        permission = self.get_permission()
+        permission = self.get_permission(request)
 
         if permission.get('status', False):
             context.update(self.get_context_data(request, *args, **kwargs))
         else:
-            context.update(self.get_permission())
+            context.update(permission)
 
         if self.get_to_template:
             return self.render_to_response(context)
@@ -55,12 +55,12 @@ class Generic(
     def post(self, request, *args, **kwargs):
         context = {}
 
-        permission = self.post_permission()
+        permission = self.post_permission(request)
 
         if permission.get('status', False):
             context.update(self.post_context_data(request, *args, **kwargs))
         else:
-            context.update(self.post_permission())
+            context.update(permission)
 
         if self.post_to_json:
             return self.response_json(context, **kwargs)
@@ -78,23 +78,23 @@ class APIGeneric(GetResponseJsonMixin, PostResponseJsonMixin, APIContextMixin, G
     def put(self, request, *args, **kwargs):
         context = {}
 
-        permission = self.put_permission()
+        permission = self.put_permission(request)
 
         if permission.get('status', False):
             context.update(self.put_context_data(request, *args, **kwargs))
         else:
-            context.update(self.put_permission())
+            context.update(permission)
 
         return self.response_json(context)
 
     def delete(self, request, *args, **kwargs):
         context = {}
 
-        permission = self.delete_permission()
+        permission = self.delete_permission(request)
 
         if permission.get('status', False):
             context.update(self.delete_context_data(request, *args, **kwargs))
         else:
-            context.update(self.delete_permission())
+            context.update(permission)
 
         return self.response_json(context)

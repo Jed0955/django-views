@@ -184,14 +184,14 @@ class JsonResponseMixin:
 # { status: True, message: 'ok'}
 
 class PermissionMixin:
-    def get_permission(self):
+    def get_permission(self, request):
         pass
 
-    def post_permission(self):
+    def post_permission(self, request):
         pass
 
-    def put_permission(self):
+    def put_permission(self, request):
         pass
 
-    def delete_permission(self):
+    def delete_permission(self, request):
         pass
