@@ -203,3 +203,7 @@ class PermissionMixin:
     @staticmethod
     def is_superuser(request):
         return request.user.is_authenticated and request.user.is_superuser
+
+    @staticmethod
+    def is_login(request):
+        return request.user.is_authenticated
