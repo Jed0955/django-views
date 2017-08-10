@@ -3,6 +3,7 @@
 # TIME    : 17-5-28 下午5:00
 # AUTHOR  : youngershen <younger.x.shen@gmail.com>
 import logging
+from django.core.paginator import EmptyPage
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator
 from django.shortcuts import reverse
@@ -165,15 +166,48 @@ class PaginationMixin:
     allow_empty_first_page = False
     pagination_class = Paginator
     page_size = 10
+    page_num = 1
+    page_size_query_name = 'page-size'
+    page_num_query_name = 'page'
 
-    def get_page_obj(self, query_set, page=1):
+    def setup(self, request):
+        page_num = request.GET.get(self.page_num_query_name)
+        page_size = request.GET.get(self.page_size_query_name)
+
+        try:
+            self.page_num = int(page_num)
+            self.page_size = int(page_size)
+        except TypeError:
+            pass
+        except ValueError:
+            pass
+
+    def get_page_obj(self, request, query_set):
+        self.setup(request)
         pager = self.pagination_class(query_set, self.page_size, allow_empty_first_page=self.allow_empty_first_page)
-        page_obj = pager.page(page)
+        page_obj = pager.page(self.page_num)
         return page_obj
 
-    def get_page(self, query_set):
+    def get_page(self, request, query_set):
+        self.setup(request)
         pager = self.pagination_class(query_set, self.page_size, allow_empty_first_page=self.allow_empty_first_page)
         return pager
+
+    def get_page_json(self, request, query_set):
+        page = self.get_page(request, query_set)
+        try:
+            page_obj = page.page(self.page_num)
+            object_list = list(page_obj.object_list)
+        except EmptyPage:
+            object_list = []
+
+        data = {
+            'page_size': self.page_size,
+            'page_num': self.page_num,
+            'page_count': page.num_pages,
+            'list': object_list
+        }
+        return data
 
 
 class JsonResponseMixin:
