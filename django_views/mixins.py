@@ -163,15 +163,15 @@ class FlashNoteMixin:
 class PaginationMixin:
     allow_empty_first_page = False
     pagination_class = Paginator
-    per_page = 10
+    page_size = 10
 
     def get_page_obj(self, query_set, page=1):
-        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
+        pager = self.pagination_class(query_set, self.page_size, allow_empty_first_page=self.allow_empty_first_page)
         page_obj = pager.page(page)
         return page_obj
 
     def get_page(self, query_set):
-        pager = self.pagination_class(query_set, self.per_page, allow_empty_first_page=self.allow_empty_first_page)
+        pager = self.pagination_class(query_set, self.page_size, allow_empty_first_page=self.allow_empty_first_page)
         return pager
 
 
