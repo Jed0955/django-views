@@ -205,6 +205,7 @@ class PaginationMixin:
             'page_size': self.page_size,
             'page_num': self.page_num,
             'page_count': page.num_pages,
+            'total': page.count,
             'list': object_list
         }
         return data
