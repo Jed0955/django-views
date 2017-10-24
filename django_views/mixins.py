@@ -171,8 +171,16 @@ class PaginationMixin:
     page_num_query_name = 'page'
 
     def setup(self, request):
-        page_num = request.GET.get(self.page_num_query_name)
-        page_size = request.GET.get(self.page_size_query_name)
+        page_num = self.page_num
+        page_size = self.page_size
+        if self.page_num_query_name in request.GET:
+            page_num = request.GET.get(self.page_num_query_name)
+        elif self.page_num_query_name in request.POST:
+            page_num = request.POST.get(self.page_num_query_name)
+        if self.page_size_query_name in request.GET:
+            page_size = request.GET.get(self.page_size_query_name)
+        elif self.page_size_query_name in request.POST:
+            page_size = request.POST.get(self.page_size_query_name)
 
         try:
             self.page_num = int(page_num)
